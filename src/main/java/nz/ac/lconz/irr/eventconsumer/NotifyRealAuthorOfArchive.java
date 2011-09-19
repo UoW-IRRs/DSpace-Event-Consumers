@@ -2,14 +2,13 @@ package nz.ac.lconz.irr.eventconsumer;
 
 import org.dspace.content.DCValue;
 import org.dspace.content.Item;
-import org.dspace.core.ConfigurationManager;
-import org.dspace.core.Constants;
-import org.dspace.core.Context;
-import org.dspace.core.Email;
+import org.dspace.core.*;
 import org.dspace.event.Consumer;
 import org.dspace.event.Event;
 import org.dspace.handle.HandleManager;
 import org.springframework.beans.factory.annotation.Qualifier;
+
+import java.util.Locale;
 
 /**
  * @author Andrea Schweer schweer@waikato.ac.nz
@@ -59,14 +58,14 @@ public class NotifyRealAuthorOfArchive implements Consumer {
 		if (event.getSubjectType() != Constants.ITEM || event.getEventType() != Event.INSTALL) {
 			return; // wrong type of dso or of event -> ignore
 		}
-		Item item = (Item) event.getObject(context);
+		Item item = (Item) event.getSubject(context);
 		String submitterEmail = item.getSubmitter().getEmail();
 		DCValue[] authors = item.getMetadata(schema, element, qualifier, Item.ANY);
 		if (authors == null || authors.length == 0) {
 			return; // nothing to do
 		}
 
-		Email message = ConfigurationManager.getEmail("author_notify_archive");
+		Email message = ConfigurationManager.getEmail(I18nUtil.getEmailFilename(Locale.getDefault(), "author_notify_archive"));
 		int recipients = 0;
 		for (DCValue author : authors) {
 			String authorEmail = author.value;
