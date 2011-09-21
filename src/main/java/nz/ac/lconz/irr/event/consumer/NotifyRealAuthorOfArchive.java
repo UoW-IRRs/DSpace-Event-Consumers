@@ -1,4 +1,4 @@
-package nz.ac.lconz.irr.eventconsumer;
+package nz.ac.lconz.irr.event.consumer;
 
 import org.dspace.content.DCValue;
 import org.dspace.content.Item;
@@ -6,7 +6,6 @@ import org.dspace.core.*;
 import org.dspace.event.Consumer;
 import org.dspace.event.Event;
 import org.dspace.handle.HandleManager;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.Locale;
 

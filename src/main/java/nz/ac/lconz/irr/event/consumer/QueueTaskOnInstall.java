@@ -1,4 +1,4 @@
-package nz.ac.lconz.irr.eventconsumer;
+package nz.ac.lconz.irr.event.consumer;
 
 import org.dspace.content.Item;
 import org.dspace.core.ConfigurationManager;
