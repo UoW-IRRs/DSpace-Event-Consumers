@@ -111,8 +111,8 @@ public class EmbargoHooks {
 			DCValue titles[] = item.getMetadata(MetadataSchema.DC_SCHEMA, "title", null, Item.ANY);
 			DCValue authors[] = item.getMetadata(MetadataSchema.DC_SCHEMA, "contributor", "author", Item.ANY);
 
-			String title = titles[0].value;
-			String author = authors[0].value;
+			String title = titles.length > 0 ? titles[0].value : "no title";
+			String author = authors.length > 0 ? authors[0].value : "no authors";
 
 			// Send email
 			Email emailmsg = ConfigurationManager.getEmail(I18nUtil.getEmailFilename(context.getCurrentLocale(), EMAIL_TEMPLATE_NOTIFY_SET));
@@ -181,8 +181,8 @@ public class EmbargoHooks {
 			// Get some basic metadata
 			DCValue[] titles = item.getMetadata(MetadataSchema.DC_SCHEMA, "title", null, Item.ANY);
 			DCValue[] authors = item.getMetadata(MetadataSchema.DC_SCHEMA, "contributor", "author", Item.ANY);
-			String title = titles[0].value;
-			String author = authors[0].value;
+			String title = titles.length > 0 ? titles[0].value : "no title";
+			String author = authors.length > 0 ? authors[0].value : "no authors";
 			// Send email
 			Email emailmsg = ConfigurationManager.getEmail(I18nUtil.getEmailFilename(context.getCurrentLocale(), EMAIL_TEMPLATE_NOTIFY_LIFTED));
 			for (EPerson recipient : recipients) {
@@ -228,8 +228,8 @@ public class EmbargoHooks {
 			// Get some basic metadata
 			DCValue[] titles = item.getMetadata(MetadataSchema.DC_SCHEMA, "title", null, Item.ANY);
 			DCValue[] authors = item.getMetadata(MetadataSchema.DC_SCHEMA, "contributor", "author", Item.ANY);
-			String title = titles[0].value;
-			String author = authors[0].value;
+			String title = titles.length > 0 ? titles[0].value : "no title";
+			String author = authors.length > 0 ? authors[0].value : "no authors";
 			// Send email
 			Email emailmsg = ConfigurationManager.getEmail(I18nUtil.getEmailFilename(context.getCurrentLocale(), EMAIL_TEMPLATE_NOTIFY_EXPIRED));
 			for (EPerson recipient : recipients) {
@@ -275,8 +275,8 @@ public class EmbargoHooks {
 			// Get some basic metadata
 			DCValue[] titles = item.getMetadata(MetadataSchema.DC_SCHEMA, "title", null, Item.ANY);
 			DCValue[] authors = item.getMetadata(MetadataSchema.DC_SCHEMA, "contributor", "author", Item.ANY);
-			String title = titles[0].value;
-			String author = authors[0].value;
+			String title = titles.length > 0 ? titles[0].value : "no title";
+			String author = authors.length > 0 ? authors[0].value : "no authors";
 			// Send email
 			Email emailmsg = ConfigurationManager.getEmail(I18nUtil.getEmailFilename(context.getCurrentLocale(), EMAIL_TEMPLATE_NOTIFY_ADVANCE_EXPIRY));
 			for (EPerson recipient : recipients) {
@@ -316,8 +316,8 @@ public class EmbargoHooks {
 			// Get some basic metadata
 			DCValue[] titles = item.getMetadata(MetadataSchema.DC_SCHEMA, "title", null, Item.ANY);
 			DCValue[] authors = item.getMetadata(MetadataSchema.DC_SCHEMA, "contributor", "author", Item.ANY);
-			String title = titles[0].value;
-			String author = authors[0].value;
+			String title = titles.length > 0 ? titles[0].value : "no title";
+			String author = authors.length > 0 ? authors[0].value : "no authors";
 			// Send email
 			Email emailmsg = ConfigurationManager.getEmail(I18nUtil.getEmailFilename(context.getCurrentLocale(), EMAIL_TEMPLATE_NOTIFY_PERMISSIONS));
 			for (EPerson recipient : recipients) {
