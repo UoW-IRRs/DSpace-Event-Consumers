@@ -1,0 +1,30 @@
+# Email sent to DSpace admins when item permissions are incorrect
+#
+# Parameters: 
+# {0} handle or [workflow item]
+# {1} title
+# {2} first author
+# {3} embargo lift date
+# {4} link if the item has a handle
+#
+# See org.dspace.core.Email for information on the format of this file.
+#
+Subject: Scholarly Commons: Embargoed item with incorrect permissions
+
+*** WARNING ***
+
+This is an automated message to inform you that an embargoed item has
+incorrect permissions:
+
+{1} 
+by {2}
+embargoed until {3}
+{4}
+
+These incorrect policies were detected by the daily automated check of
+authorisation policies. 
+
+You will continue to receive daily notifications about this item until
+authorisation policies are applied correctly.
+
+DSpace
