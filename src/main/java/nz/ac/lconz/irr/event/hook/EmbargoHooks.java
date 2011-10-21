@@ -56,7 +56,7 @@ public class EmbargoHooks {
 	}
 
 	public static void atEmbargoExpired(Context context, Item item, DCDate liftDate) {
-		notifyEmbargoAboutToExpire(context, item, liftDate);
+		notifyEmbargoExpired(context, item, liftDate);
 	}
 
 	public static void atEmbargoAboutToExpire(Context context, Item item, DCDate liftDate) {
