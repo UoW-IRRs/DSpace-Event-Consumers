@@ -11,18 +11,17 @@ import java.util.Locale;
 
 /**
  * @author Andrea Schweer schweer@waikato.ac.nz
- *
- * DSpace event consumer that sends an e-mail to the thesis author when an item is archived.
- *
- * This is useful for theses deposited via Sword since the submitter is set in DSpace to an e-mail address
- * for the sword form rather than that of the actual author of the item.
- *
- * The metadata field for the thesis author is expected to be set in a DSpace configuration variable with the key
- * <code>notify.author.archive.field</code>.
- *
- * The template for the e-mail is expected to be called <i>author_notify_archive</i>
- * in the dspace/config/emails directory.
- *
+ *         <p/>
+ *         DSpace event consumer that sends an e-mail to the thesis author when an item is archived.
+ *         <p/>
+ *         This is useful for theses deposited via Sword since the submitter is set in DSpace to an e-mail address
+ *         for the sword form rather than that of the actual author of the item.
+ *         <p/>
+ *         The metadata field for the thesis author is expected to be set in a DSpace configuration variable with the key
+ *         <code>notify.author.archive.field</code>.
+ *         <p/>
+ *         The template for the e-mail is expected to be called <i>author_notify_archive</i>
+ *         in the dspace/config/emails directory.
  */
 public class NotifyRealAuthorOfArchive implements Consumer {
 	private String schema;
@@ -68,12 +67,11 @@ public class NotifyRealAuthorOfArchive implements Consumer {
 		int recipients = 0;
 		for (DCValue author : authors) {
 			String authorEmail = author.value;
-			if (authorEmail != null && ! authorEmail.equalsIgnoreCase(submitterEmail)) {
+			if (authorEmail != null && !authorEmail.equalsIgnoreCase(submitterEmail)) {
 				message.addRecipient(authorEmail);
 				recipients++;
 			}
 		}
-		item.decache();
 		if (recipients == 0) {
 			return; // no e-mail to send
 		}
