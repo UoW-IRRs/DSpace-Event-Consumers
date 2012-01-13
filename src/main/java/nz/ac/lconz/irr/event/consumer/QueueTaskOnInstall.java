@@ -1,19 +1,14 @@
 package nz.ac.lconz.irr.event.consumer;
 
 import org.dspace.content.Item;
-import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
-import org.dspace.curate.Curator;
-import org.dspace.event.Consumer;
 import org.dspace.event.Event;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.sql.SQLException;
 
 /**
- * @author Andrea Schweer schweer@waikato.ac.nz
+ *  @author Andrea Schweer schweer@waikato.ac.nz for LCoNZ IRR project
  *
  * Event consumer that queues curation tasks when an item is installed into the archive.
  *
@@ -26,37 +21,24 @@ import java.util.List;
  * every minute or two.
  *
  */
-public class QueueTaskOnInstall implements Consumer {
-	List<String> taskNames = new ArrayList<String>();
-	String queueName = "continually";
+public class QueueTaskOnInstall extends QueueTaskOnEvent {
 
-	public void initialize() throws Exception {
-		String taskConfig = ConfigurationManager.getProperty("lconz-event", "queue.install.tasks");
-		if (taskConfig == null || "".equals(taskConfig)) {
-			System.err.println("QueueTaskOnInstall: no configuration value found for tasks to queue, can't initialise.");
-			return;
-		}
-		taskNames.addAll(Arrays.asList(taskConfig.split(",\\s*")));
-
-		String queueConfig = ConfigurationManager.getProperty("lconz-event", "queue.install.name");
-		if (queueConfig != null && !"".equals(queueConfig)) {
-			queueName = queueConfig;
-		}
+	@Override
+	String getTasksProperty() {
+		return "queue.install.tasks";
 	}
 
-	public void consume(Context ctx, Event event) throws Exception {
-		if (event.getSubjectType() != Constants.ITEM || event.getEventType() != Event.INSTALL) {
-			return; // wrong type of dso or of event -> ignore
-		}
-		Item item = (Item) event.getSubject(ctx);
-		for (String taskName : taskNames) {
-			new Curator().addTask(taskName).queue(ctx, item.getHandle(), queueName);
-		}
+	@Override
+	String getQueueProperty() {
+		return "queue.install.name";
 	}
 
-	public void end(Context ctx) throws Exception {
+	@Override
+	boolean isApplicableEvent(Event event) {
+		return event.getSubjectType() == Constants.ITEM && event.getEventType() == Event.INSTALL;
 	}
 
-	public void finish(Context ctx) throws Exception {
+	Item findItem(Context ctx, Event event) throws SQLException {
+		return (Item) event.getSubject(ctx);
 	}
 }
