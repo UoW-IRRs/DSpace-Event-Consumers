@@ -40,9 +40,9 @@ public class QueueTaskOnBitstreamChange extends QueueTaskOnEvent {
 
 	boolean isApplicableEvent(Event event) {
 		if (event.getSubjectType() == Constants.BUNDLE) {
-			return event.getEventType() == Event.ADD || event.getEventType() == Event.MODIFY;
+			return event.getEventType() == Event.ADD || event.getEventType() == Event.REMOVE || event.getEventType() == Event.MODIFY;
 		} else if (event.getSubjectType() == Constants.BITSTREAM) {
-			return event.getEventType() == Event.MODIFY;
+			return event.getEventType() == Event.MODIFY || event.getEventType() == Event.DELETE;
 		}
 		return false;
 	}
