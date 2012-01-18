@@ -1,5 +1,6 @@
 package nz.ac.lconz.irr.event.hook;
 
+import nz.ac.lconz.irr.event.util.CurationHelper;
 import org.apache.log4j.Logger;
 import org.dspace.content.DCDate;
 import org.dspace.content.DCValue;
@@ -44,15 +45,43 @@ public class EmbargoHooks {
 	// group id for group that receives notification e-mails
 	private static final String EMBARGO_NOTIFICATION_GROUP_ID = "embargo.notify.groupid";
 
+	private static final String EMBARGO_SET_CURATION_QUEUE_NAME = "queue.embargo.set.name";
+	private static final String EMBARGO_LIFTED_CURATION_QUEUE_NAME = "queue.embargo.lifted.name";
+	private static final String EMBARGO_SET_CURATION_TASKS = "queue.embargo.set.tasks";
+	private static final String EMBARGO_LIFTED_CURATION_TASKS = "queue.embargo.lifted.tasks";
+	
 	/**
 	 * Hooks to be run when an item has an embargo set *
 	 */
 	public static void atEmbargoSet(Context context, Item item, DCDate expiryDate) {
+		log.info("Embargo set on item " + item.getID() + ", expires " + expiryDate.displayLocalDate(false, context.getCurrentLocale()));
 		notifyEmbargoSet(context, item, expiryDate);
+		try {
+			queueForCuration(context, item, EMBARGO_SET_CURATION_TASKS, EMBARGO_SET_CURATION_QUEUE_NAME);
+		} catch (IOException e) {
+			log.warn("Caught exception while trying to queue curation task when embargo was set on item id=" + item.getID());
+		}
 	}
 
 	public static void atEmbargoLifted(Context context, Item item) {
+		log.info("Embargo lifted on item " + item.getID());
 		notifyEmbargoLifted(context, item);
+		try {
+			queueForCuration(context, item, EMBARGO_LIFTED_CURATION_TASKS, EMBARGO_LIFTED_CURATION_QUEUE_NAME);
+		} catch (IOException e) {
+			log.warn("Caught exception while trying to queue curation task when embargo was lifted on item id=" + item.getID());
+		}
+	}
+
+	private static void queueForCuration(Context context, Item item, String tasksProperty, String queueProperty) throws IOException {
+		CurationHelper helper = new CurationHelper();
+		helper.initTaskNames(tasksProperty);
+		if (!helper.hasTaskNames()) {
+			return; // nothing to do
+		}
+		helper.initQueueName(queueProperty);
+		helper.addToQueue(item);
+		helper.queueForCuration(context);
 	}
 
 	public static void atEmbargoExpired(Context context, Item item, DCDate liftDate) {
