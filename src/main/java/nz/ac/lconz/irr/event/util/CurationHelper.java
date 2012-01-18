@@ -67,6 +67,6 @@ public class CurationHelper {
 	}
 
 	public boolean hasTaskNames() {
-		return taskNames.isEmpty();
+		return !taskNames.isEmpty();
 	}
 }
