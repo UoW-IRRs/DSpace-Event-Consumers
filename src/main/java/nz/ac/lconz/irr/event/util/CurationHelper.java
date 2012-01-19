@@ -39,7 +39,7 @@ public class CurationHelper {
 		if (taskConfig == null || "".equals(taskConfig)) {
 			taskNamesList = null;
 		} else {
-			taskNamesList = Arrays.asList(taskConfig.split(",\\s*"));
+			taskNamesList = Arrays.asList(taskConfig.split("\\s*,\\s*"));
 		}
 		taskNames.addAll(taskNamesList);
 	}
