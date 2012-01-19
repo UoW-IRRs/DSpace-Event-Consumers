@@ -40,11 +40,11 @@ public class QueueTaskForBundleProtection extends QueueTaskOnEvent {
 
 	@Override
 	String getTasksProperty() {
-		return "queue.bundleprotect.name";
+		return "queue.bundleprotect.tasks";
 	}
 
 	@Override
 	String getQueueProperty() {
-		return "queue.bundleprotect.tasks";
+		return "queue.bundleprotect.name";
 	}
 }
