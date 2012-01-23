@@ -18,14 +18,18 @@ import java.sql.SQLException;
 public class QueueTaskForBundleProtection extends QueueTaskOnEvent {
 	@Override
 	Item findItem(Context ctx, Event event) throws SQLException {
+		Item result = null;
 		if (event.getSubjectType() == Constants.ITEM) {
-			return (Item) event.getSubject(ctx);
+			result = (Item) event.getSubject(ctx);
 		} else if (event.getSubjectType() == Constants.BUNDLE) {
 			Bundle bundle = (Bundle) event.getSubject(ctx);
 			Item[] items = bundle.getItems();
 			if (items != null && items.length > 0) {
-				return items[0];
+				result = items[0];
 			}
+		}
+		if (result != null && result.isArchived()) {
+			return result;
 		}
 		return null;
 	}

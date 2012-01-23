@@ -58,8 +58,14 @@ public class CurationHelper {
 			for (String taskName : taskNames) {
 				Curator curator = new Curator().addTask(taskName);
 				for (Item item : toQueue) {
-					log.info("Queued item " + item.getHandle() + " for curation in queue " + queueName + ", task " + taskName);
-					curator.queue(ctx, item.getHandle(), queueName);
+					String identifier;
+					if (item.getHandle() != null) {
+						identifier = item.getHandle();
+					} else {
+						identifier = item.getID()  + "";
+					}
+					log.info("Queued item " + identifier + " for curation in queue " + queueName + ", task " + taskName);
+					curator.queue(ctx, identifier, queueName);
 				}
 			}
 		}

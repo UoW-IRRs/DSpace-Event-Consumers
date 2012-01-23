@@ -31,9 +31,13 @@ public class QueueTaskOnBitstreamChange extends QueueTaskOnEvent {
 
 
 	Item findItem(Context ctx, Event event) throws SQLException {
+		Item result = null;
 		Object parent = event.getSubject(ctx).getParentObject();
 		if (parent != null && parent instanceof Item) {
-			return (Item) parent;
+			result = (Item) parent;
+		}
+		if (result != null && result.isArchived()) {
+			return result;
 		}
 		return null;
 	}
