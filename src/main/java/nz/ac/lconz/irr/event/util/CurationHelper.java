@@ -10,6 +10,7 @@ import org.dspace.curate.Curator;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -37,11 +38,12 @@ public class CurationHelper {
 		List<String> taskNamesList;
 		String taskConfig = ConfigurationManager.getProperty("lconz-event", tasksProperty);
 		if (taskConfig == null || "".equals(taskConfig)) {
-			taskNamesList = null;
+			taskNamesList = Collections.emptyList();
 		} else {
 			taskNamesList = Arrays.asList(taskConfig.split("\\s*,\\s*"));
 		}
 		taskNames.addAll(taskNamesList);
+		log.info("Setting up tasks as " + Arrays.deepToString(taskNames.toArray()));
 	}
 
 	public void addToQueue(Item item) {
