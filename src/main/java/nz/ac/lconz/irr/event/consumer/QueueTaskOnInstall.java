@@ -34,7 +34,7 @@ public class QueueTaskOnInstall extends QueueTaskOnEvent {
 	}
 
 	@Override
-	boolean isApplicableEvent(Event event) {
+	boolean isApplicableEvent(Context ctx, Event event) {
 		return event.getSubjectType() == Constants.ITEM && event.getEventType() == Event.INSTALL;
 	}
 

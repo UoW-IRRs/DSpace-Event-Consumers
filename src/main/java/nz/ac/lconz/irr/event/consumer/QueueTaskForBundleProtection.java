@@ -35,7 +35,7 @@ public class QueueTaskForBundleProtection extends QueueTaskOnEvent {
 	}
 
 	@Override
-	boolean isApplicableEvent(Event event) {
+	boolean isApplicableEvent(Context ctx, Event event) {
 		if (event.getSubjectType() == Constants.ITEM || event.getSubjectType() == Constants.BUNDLE) {
 			return event.getEventType() == Event.ADD;
 		}

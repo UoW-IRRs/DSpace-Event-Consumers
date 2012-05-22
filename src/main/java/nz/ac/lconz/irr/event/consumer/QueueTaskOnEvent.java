@@ -33,7 +33,7 @@ public abstract class QueueTaskOnEvent implements Consumer {
 	public void consume(Context ctx, Event event) throws Exception {
 		Item item = null;
 
-		if (isApplicableEvent(event)) {
+		if (isApplicableEvent(ctx, event)) {
 			item = findItem(ctx, event);
 		} else {
 			log.info("Event is not applicable, skipping");
@@ -50,7 +50,7 @@ public abstract class QueueTaskOnEvent implements Consumer {
 
 	abstract Item findItem(Context ctx, Event event) throws SQLException;
 
-	abstract boolean isApplicableEvent(Event event);
+	abstract boolean isApplicableEvent(Context ctx, Event event) throws SQLException;
 
 	public void end(Context ctx) throws Exception {
 		helper.queueForCuration(ctx);

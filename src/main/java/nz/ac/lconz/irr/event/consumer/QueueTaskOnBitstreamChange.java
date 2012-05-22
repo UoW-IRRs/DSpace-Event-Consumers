@@ -1,17 +1,11 @@
 package nz.ac.lconz.irr.event.consumer;
 
 import org.dspace.content.Item;
-import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
-import org.dspace.curate.Curator;
-import org.dspace.event.Consumer;
 import org.dspace.event.Event;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  *  @author Andrea Schweer schweer@waikato.ac.nz for LCoNZ IRR project
@@ -42,7 +36,7 @@ public class QueueTaskOnBitstreamChange extends QueueTaskOnEvent {
 		return null;
 	}
 
-	boolean isApplicableEvent(Event event) {
+	boolean isApplicableEvent(Context ctx, Event event) {
 		if (event.getSubjectType() == Constants.BUNDLE) {
 			return event.getEventType() == Event.ADD || event.getEventType() == Event.REMOVE || event.getEventType() == Event.MODIFY;
 		} else if (event.getSubjectType() == Constants.BITSTREAM) {
