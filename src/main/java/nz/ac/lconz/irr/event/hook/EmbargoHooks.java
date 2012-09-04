@@ -277,16 +277,21 @@ public class EmbargoHooks {
 					log.warn("can't determine url to item from handle " + itemIdentifier, ex);
 				}
 			}
+			String collectionName = item.getOwningCollection().getName();
+
 			emailmsg.addArgument(itemIdentifier);
 			emailmsg.addArgument(title);
 			emailmsg.addArgument(author);
 			emailmsg.addArgument(liftDate.toString());
 			emailmsg.addArgument(url);
+			emailmsg.addArgument(collectionName);
 			emailmsg.send();
 		} catch (IOException ioe) {
 			log.warn("Problem sending notification email when detecting expired embargo", ioe);
 		} catch (MessagingException me) {
 			log.warn("Problem sending notification email when detecting expired embargo", me);
+		} catch (SQLException e) {
+			log.warn("Problem sending notification email when detecting expired embargo", e);
 		}
 	}
 
