@@ -29,6 +29,10 @@ public class QueueTaskOnBitstreamChange extends QueueTaskOnEvent {
 			return null;
 		}
 
+		if (event.getSubjectType() == Constants.ITEM) {
+			return (Item) event.getSubject(ctx);
+		}
+
 		Item result = null;
 		Object parent = event.getSubject(ctx).getParentObject();
 		if (parent != null && parent instanceof Item) {
@@ -41,10 +45,12 @@ public class QueueTaskOnBitstreamChange extends QueueTaskOnEvent {
 	}
 
 	boolean isApplicableEvent(Context ctx, Event event) {
-		if (event.getSubjectType() == Constants.BUNDLE) {
-			return event.getEventType() == Event.ADD || event.getEventType() == Event.REMOVE || event.getEventType() == Event.MODIFY;
-		} else if (event.getSubjectType() == Constants.BITSTREAM) {
-			return event.getEventType() == Event.MODIFY || event.getEventType() == Event.DELETE;
+		if (event.getSubjectType() == Constants.BITSTREAM) {
+			return event.getEventType() == Event.MODIFY;
+		} else if (event.getSubjectType() == Constants.BUNDLE) {
+			return event.getEventType() == Event.REMOVE;
+		} else if (event.getSubjectType() == Constants.ITEM) {
+			return event.getEventType() == Event.REMOVE;
 		}
 		return false;
 	}
