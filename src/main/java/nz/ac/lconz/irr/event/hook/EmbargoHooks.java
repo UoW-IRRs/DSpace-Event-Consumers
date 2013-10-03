@@ -372,7 +372,7 @@ public class EmbargoHooks {
 			emailmsg.addArgument(itemIdentifier);
 			emailmsg.addArgument(title);
 			emailmsg.addArgument(author);
-			DCDate liftDate = EmbargoManager.getEmbargoDate(context, item);
+			DCDate liftDate = EmbargoManager.getEmbargoTermsAsDate(context, item);
 			emailmsg.addArgument(liftDate);
 			emailmsg.addArgument(url);
 			emailmsg.send();
