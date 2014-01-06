@@ -67,7 +67,7 @@ public class NotifyRealAuthorOfArchive implements Consumer {
 		if (emailFilename == null || "".equals(emailFilename.trim())) {
 			return; // no e-mail to send
 		}
-		Email message = ConfigurationManager.getEmail(emailFilename);
+		Email message = Email.getEmail(emailFilename);
 		int recipients = 0;
 		for (DCValue author : authors) {
 			String authorEmail = author.value;

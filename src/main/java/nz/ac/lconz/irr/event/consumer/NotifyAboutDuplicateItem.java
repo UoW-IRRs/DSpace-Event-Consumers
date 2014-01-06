@@ -63,7 +63,7 @@ public class NotifyAboutDuplicateItem implements Consumer {
 			System.err.println("NotifyAboutDuplicateItem: e-mail template (notify_duplicate) not found");
 			return; // no e-mail to send
 		}
-		Email message = ConfigurationManager.getEmail(emailFilename);
+		Email message = Email.getEmail(emailFilename);
 		for (EPerson member : recipients.getMembers()) {
 			message.addRecipient(member.getEmail());
 		}

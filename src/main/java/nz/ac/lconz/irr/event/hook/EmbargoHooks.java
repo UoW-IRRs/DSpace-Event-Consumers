@@ -144,7 +144,7 @@ public class EmbargoHooks {
 			String author = authors.length > 0 ? authors[0].value : "no authors";
 
 			// Send email
-			Email emailmsg = ConfigurationManager.getEmail(I18nUtil.getEmailFilename(context.getCurrentLocale(), EMAIL_TEMPLATE_NOTIFY_SET));
+			Email emailmsg = Email.getEmail(I18nUtil.getEmailFilename(context.getCurrentLocale(), EMAIL_TEMPLATE_NOTIFY_SET));
 			for (EPerson recipient : recipients) {
 				emailmsg.addRecipient(recipient.getEmail());
 			}
@@ -213,7 +213,7 @@ public class EmbargoHooks {
 			String title = titles.length > 0 ? titles[0].value : "no title";
 			String author = authors.length > 0 ? authors[0].value : "no authors";
 			// Send email
-			Email emailmsg = ConfigurationManager.getEmail(I18nUtil.getEmailFilename(context.getCurrentLocale(), EMAIL_TEMPLATE_NOTIFY_LIFTED));
+			Email emailmsg = Email.getEmail(I18nUtil.getEmailFilename(context.getCurrentLocale(), EMAIL_TEMPLATE_NOTIFY_LIFTED));
 			for (EPerson recipient : recipients) {
 				emailmsg.addRecipient(recipient.getEmail());
 			}
@@ -260,7 +260,7 @@ public class EmbargoHooks {
 			String title = titles.length > 0 ? titles[0].value : "no title";
 			String author = authors.length > 0 ? authors[0].value : "no authors";
 			// Send email
-			Email emailmsg = ConfigurationManager.getEmail(I18nUtil.getEmailFilename(context.getCurrentLocale(), EMAIL_TEMPLATE_NOTIFY_EXPIRED));
+			Email emailmsg = Email.getEmail(I18nUtil.getEmailFilename(context.getCurrentLocale(), EMAIL_TEMPLATE_NOTIFY_EXPIRED));
 			for (EPerson recipient : recipients) {
 				emailmsg.addRecipient(recipient.getEmail());
 			}
@@ -312,7 +312,7 @@ public class EmbargoHooks {
 			String title = titles.length > 0 ? titles[0].value : "no title";
 			String author = authors.length > 0 ? authors[0].value : "no authors";
 			// Send email
-			Email emailmsg = ConfigurationManager.getEmail(I18nUtil.getEmailFilename(context.getCurrentLocale(), EMAIL_TEMPLATE_NOTIFY_ADVANCE_EXPIRY));
+			Email emailmsg = Email.getEmail(I18nUtil.getEmailFilename(context.getCurrentLocale(), EMAIL_TEMPLATE_NOTIFY_ADVANCE_EXPIRY));
 			for (EPerson recipient : recipients) {
 				emailmsg.addRecipient(recipient.getEmail());
 			}
@@ -353,7 +353,7 @@ public class EmbargoHooks {
 			String title = titles.length > 0 ? titles[0].value : "no title";
 			String author = authors.length > 0 ? authors[0].value : "no authors";
 			// Send email
-			Email emailmsg = ConfigurationManager.getEmail(I18nUtil.getEmailFilename(context.getCurrentLocale(), EMAIL_TEMPLATE_NOTIFY_PERMISSIONS));
+			Email emailmsg = Email.getEmail(I18nUtil.getEmailFilename(context.getCurrentLocale(), EMAIL_TEMPLATE_NOTIFY_PERMISSIONS));
 			for (EPerson recipient : recipients) {
 				emailmsg.addRecipient(recipient.getEmail());
 			}
