@@ -88,10 +88,6 @@ public class EmbargoHooks {
 		notifyEmbargoExpired(context, item, liftDate);
 	}
 
-	public static void atEmbargoAboutToExpire(Context context, Item item, DCDate liftDate) {
-		notifyEmbargoAboutToExpire(context, item, liftDate);
-	}
-
 	public static void atPermissionsIncorrect(Context context, Item item) {
 		try {
 			notifyPermissionsIncorrect(context, item);
@@ -294,54 +290,6 @@ public class EmbargoHooks {
 			log.warn("Problem sending notification email when detecting expired embargo", e);
 		}
 	}
-
-	private static void notifyEmbargoAboutToExpire(Context context, Item item, DCDate liftDate) {
-		// notify the thesis admins
-		EPerson[] recipients;
-		try {
-			recipients = findNotificationRecipients(context);
-		} catch (SQLException sqle) {
-			log.warn("Can't notify thesis admins of embargo that's about to expire.", sqle);
-			return;
-		}
-		// Send email to thesis administrators
-		try {
-			// Get some basic metadata
-			DCValue[] titles = item.getMetadata(MetadataSchema.DC_SCHEMA, "title", null, Item.ANY);
-			DCValue[] authors = item.getMetadata(MetadataSchema.DC_SCHEMA, "contributor", "author", Item.ANY);
-			String title = titles.length > 0 ? titles[0].value : "no title";
-			String author = authors.length > 0 ? authors[0].value : "no authors";
-			// Send email
-			Email emailmsg = Email.getEmail(I18nUtil.getEmailFilename(context.getCurrentLocale(), EMAIL_TEMPLATE_NOTIFY_ADVANCE_EXPIRY));
-			for (EPerson recipient : recipients) {
-				emailmsg.addRecipient(recipient.getEmail());
-			}
-
-			String itemIdentifier = "[workflow item]";
-			String url = "the item's workflow screen";
-			if (item.getHandle() != null) {
-				itemIdentifier = item.getHandle();
-				try {
-					String link = HandleManager.resolveToURL(context, itemIdentifier);
-					if (link != null)
-						url = link;
-				} catch (SQLException ex) {
-					log.warn("can't determine url to item from handle " + itemIdentifier, ex);
-				}
-			}
-			emailmsg.addArgument(itemIdentifier);
-			emailmsg.addArgument(title);
-			emailmsg.addArgument(author);
-			emailmsg.addArgument(liftDate.toString());
-			emailmsg.addArgument(url);
-			emailmsg.send();
-		} catch (IOException ioe) {
-			log.warn("Problem sending notification email when detecting embargo that's about to expire", ioe);
-		} catch (MessagingException me) {
-			log.warn("Problem sending notification email when detecting embargo that's about to expire", me);
-		}
-	}
-
 
 	private static void notifyPermissionsIncorrect(Context context, Item item) throws SQLException {
 		EPerson[] recipients = findNotificationRecipients(context);
