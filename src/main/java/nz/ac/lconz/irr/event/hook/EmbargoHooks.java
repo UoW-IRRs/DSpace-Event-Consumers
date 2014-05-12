@@ -6,10 +6,7 @@ import org.dspace.content.DCDate;
 import org.dspace.content.DCValue;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataSchema;
-import org.dspace.core.ConfigurationManager;
-import org.dspace.core.Context;
-import org.dspace.core.Email;
-import org.dspace.core.I18nUtil;
+import org.dspace.core.*;
 import org.dspace.embargo.EmbargoManager;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
@@ -54,7 +51,8 @@ public class EmbargoHooks {
 	 * Hooks to be run when an item has an embargo set *
 	 */
 	public static void atEmbargoSet(Context context, Item item, DCDate expiryDate) {
-		log.info("Embargo set on item " + item.getID() + ", expires " + expiryDate.displayLocalDate(false, context.getCurrentLocale()));
+		log.info(LogManager.getHeader(context, "thesis_embargo_set", "Thesis embargo set on item " + item.getID() + ", expires " + expiryDate.displayLocalDate(false, context.getCurrentLocale())));
+
 		notifyEmbargoSet(context, item, expiryDate);
 		try {
 			queueForCuration(context, item, EMBARGO_SET_CURATION_TASKS, EMBARGO_SET_CURATION_QUEUE_NAME);
@@ -64,7 +62,7 @@ public class EmbargoHooks {
 	}
 
 	public static void atEmbargoLifted(Context context, Item item) {
-		log.info("Embargo lifted on item " + item.getID());
+		log.info(LogManager.getHeader(context, "thesis_embargo_lifted", "Thesis embargo lifted on item ") + item.getID());
 		notifyEmbargoLifted(context, item);
 		try {
 			queueForCuration(context, item, EMBARGO_LIFTED_CURATION_TASKS, EMBARGO_LIFTED_CURATION_QUEUE_NAME);
@@ -109,7 +107,7 @@ public class EmbargoHooks {
 		}
 
 		// add a provenance message
-		StringBuilder provmessage = new StringBuilder("Endorsed restriction until ");
+		StringBuilder provmessage = new StringBuilder("Thesis embargo until ");
 		provmessage.append(liftDate);
 		provmessage.append(" set by ");
 		provmessage.append(name);
@@ -184,7 +182,7 @@ public class EmbargoHooks {
 		}
 
 		// add a provenance message
-		StringBuilder provmessage = new StringBuilder("Endorsed restriction lifted by ");
+		StringBuilder provmessage = new StringBuilder("Thesis embargo lifted by ");
 		provmessage.append(name);
 		provmessage.append(" (");
 		provmessage.append(email);
