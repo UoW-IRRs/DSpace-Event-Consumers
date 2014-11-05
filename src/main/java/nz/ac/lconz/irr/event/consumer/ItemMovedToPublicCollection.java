@@ -12,11 +12,9 @@ import org.dspace.event.Event;
 import java.sql.SQLException;
 
 /**
- * Created with IntelliJ IDEA.
- * User: schweer
- * Date: 23/05/12
- * Time: 11:37 AM
- * To change this template use File | Settings | File Templates.
+ *  @author Andrea Schweer schweer@waikato.ac.nz for the LCoNZ IRRs
+ *
+ *  Event consumer that checks whether the event represents an item that has been moved to a publicly-readable collection.
  */
 public class ItemMovedToPublicCollection extends QueueTaskOnEvent {
 	@Override

@@ -8,9 +8,10 @@ import org.dspace.event.Consumer;
 import org.dspace.event.Event;
 
 import java.sql.SQLException;
+import java.util.LinkedList;
 
 /**
- *  @author Andrea Schweer schweer@waikato.ac.nz for LCoNZ IRR project
+ *  @author Andrea Schweer schweer@waikato.ac.nz for the LCoNZ IRRs
  *
  * Abstract event consumer that queues curation tasks when specific events occur.
  */

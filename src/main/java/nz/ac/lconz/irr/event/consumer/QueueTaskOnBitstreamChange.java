@@ -8,7 +8,7 @@ import org.dspace.event.Event;
 import java.sql.SQLException;
 
 /**
- *  @author Andrea Schweer schweer@waikato.ac.nz for LCoNZ IRR project
+ *  @author Andrea Schweer schweer@waikato.ac.nz for the LCoNZ IRRs
  *
  * Event consumer that queues curation tasks when an item's bitstreams are changed in any way.
  *

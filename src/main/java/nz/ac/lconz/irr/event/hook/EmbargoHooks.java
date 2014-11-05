@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 /**
- * @author Andrea Schweer schweer@waikato.ac.nz
+ * @author Andrea Schweer schweer@waikato.ac.nz for the LCoNZ IRRs
  *         <p/>
  *         Configuration properties:
  *         <p/>

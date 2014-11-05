@@ -10,7 +10,7 @@ import org.dspace.handle.HandleManager;
 import java.util.Locale;
 
 /**
- * @author Andrea Schweer schweer@waikato.ac.nz
+ * @author Andrea Schweer schweer@waikato.ac.nz for the LCoNZ IRRs
  *         <p/>
  *         DSpace event consumer that sends an e-mail to the thesis author when an item is archived.
  *         <p/>

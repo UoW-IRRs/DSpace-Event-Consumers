@@ -15,7 +15,7 @@ import java.util.List;
 
 /**
  * Helper class to deal with curation tasks.
- * @author Andrea Schweer schweer@waikato.ac.nz for LCoNZ IRR project
+ * @author Andrea Schweer schweer@waikato.ac.nz for the LCoNZ IRRs
  */
 public class CurationHelper {
 	private static Logger log = Logger.getLogger(CurationHelper.class);
