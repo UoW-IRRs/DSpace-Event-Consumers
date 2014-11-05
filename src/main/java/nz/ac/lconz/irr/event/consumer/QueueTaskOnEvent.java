@@ -35,14 +35,18 @@ public abstract class QueueTaskOnEvent implements Consumer {
 		Item item = null;
 
 		if (isApplicableEvent(ctx, event)) {
+			// check whether it is the last applicable event in the queue
+			LinkedList<Event> events = ctx.getEvents();
+			for (Event queuedEvent : events) {
+				if (isApplicableEvent(ctx, queuedEvent)) {
+					return;
+				}
+			}
 			item = findItem(ctx, event);
-		} else {
-			log.info("Event is not applicable, skipping");
 		}
 
 		if (item == null) {
 			// not applicable -> skip
-			log.info("Can't find item to work on, skipping");
 			return;
 		}
 

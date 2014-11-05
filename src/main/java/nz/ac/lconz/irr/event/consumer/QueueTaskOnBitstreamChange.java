@@ -23,7 +23,7 @@ import java.sql.SQLException;
  */
 public class QueueTaskOnBitstreamChange extends QueueTaskOnEvent {
 
-
+	@Override
 	Item findItem(Context ctx, Event event) throws SQLException {
 		if (event.getSubject(ctx) == null) {
 			return null;
@@ -44,15 +44,12 @@ public class QueueTaskOnBitstreamChange extends QueueTaskOnEvent {
 		return null;
 	}
 
-	boolean isApplicableEvent(Context ctx, Event event) {
-		if (event.getSubjectType() == Constants.BITSTREAM) {
-			return event.getEventType() == Event.MODIFY;
-		} else if (event.getSubjectType() == Constants.BUNDLE) {
-			return event.getEventType() == Event.REMOVE;
-		} else if (event.getSubjectType() == Constants.ITEM) {
-			return event.getEventType() == Event.REMOVE;
-		}
-		return false;
+	@Override
+	boolean isApplicableEvent(Context ctx, Event event) throws SQLException {
+		int eventType = event.getEventType();
+		return (event.getSubjectType() == Constants.BUNDLE && (eventType == Event.ADD || eventType == Event.REMOVE))
+				|| (event.getSubjectType() == Constants.ITEM && eventType == Event.REMOVE)
+				&& (findItem(ctx, event) != null);
 	}
 
 	String getTasksProperty() {
