@@ -3,7 +3,7 @@
 
   <groupId>nz.ac.lconz.irr</groupId>
   <artifactId>lconz-event-consumers</artifactId>
-  <version>4.4-SNAPSHOT</version>
+  <version>4.4</version>
   <packaging>jar</packaging>
 
   <name>event-consumers</name>
