@@ -1,7 +1,7 @@
 package nz.ac.lconz.irr.event.consumer;
 
-import org.dspace.content.DCValue;
 import org.dspace.content.Item;
+import org.dspace.content.Metadatum;
 import org.dspace.core.*;
 import org.dspace.event.Consumer;
 import org.dspace.event.Event;
@@ -58,7 +58,7 @@ public class NotifyRealAuthorOfArchive implements Consumer {
 		}
 		Item item = (Item) event.getSubject(context);
 		String submitterEmail = item.getSubmitter().getEmail();
-		DCValue[] authors = item.getMetadata(schema, element, qualifier, Item.ANY);
+		Metadatum[] authors = item.getMetadata(schema, element, qualifier, Item.ANY);
 		if (authors == null || authors.length == 0) {
 			return; // nothing to do
 		}
@@ -69,7 +69,7 @@ public class NotifyRealAuthorOfArchive implements Consumer {
 		}
 		Email message = Email.getEmail(emailFilename);
 		int recipients = 0;
-		for (DCValue author : authors) {
+		for (Metadatum author : authors) {
 			String authorEmail = author.value;
 			if (authorEmail != null && !authorEmail.equalsIgnoreCase(submitterEmail)) {
 				message.addRecipient(authorEmail);

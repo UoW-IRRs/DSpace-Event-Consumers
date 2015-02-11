@@ -1,7 +1,7 @@
 package nz.ac.lconz.irr.event.consumer;
 
-import org.dspace.content.DCValue;
 import org.dspace.content.Item;
+import org.dspace.content.Metadatum;
 import org.dspace.core.*;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
@@ -21,7 +21,7 @@ import java.util.Locale;
  */
 public class NotifyAboutDuplicateItem implements Consumer {
 	private Integer recipientsGroupId = -1;
-	private String triggerString = "this item replaces another item with handle";
+	private static final String triggerString = "this item replaces another item with handle";
 
 	public void initialize() throws Exception {
 		String recipientsGroup = ConfigurationManager.getProperty("lconz-event", "notify.duplicate.recipients-group-id");
@@ -33,7 +33,6 @@ public class NotifyAboutDuplicateItem implements Consumer {
 			recipientsGroupId = Integer.valueOf(recipientsGroup);
 		} catch (NumberFormatException e) {
 			System.err.printf("NotifyAboutDuplicateItem: notification recipients group ID %s isn't numeric, can't initialise.\n", recipientsGroup);
-			return;
 		}
 	}
 
@@ -43,8 +42,8 @@ public class NotifyAboutDuplicateItem implements Consumer {
 		}
 
 		Item item = (Item) event.getSubject(context);
-		DCValue[] provenanceValues = item.getMetadata("dc.description.provenance");
-		for (DCValue provenanceValue : provenanceValues) {
+		Metadatum[] provenanceValues = item.getMetadataByMetadataString("dc.description.provenance");
+		for (Metadatum provenanceValue : provenanceValues) {
 			if (provenanceValue != null && provenanceValue.value != null && provenanceValue.value.contains(triggerString)) {
 				sendNotification(context, item);
 			}

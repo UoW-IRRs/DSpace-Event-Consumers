@@ -3,9 +3,9 @@ package nz.ac.lconz.irr.event.hook;
 import nz.ac.lconz.irr.event.util.CurationHelper;
 import org.apache.log4j.Logger;
 import org.dspace.content.DCDate;
-import org.dspace.content.DCValue;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataSchema;
+import org.dspace.content.Metadatum;
 import org.dspace.core.*;
 import org.dspace.embargo.EmbargoManager;
 import org.dspace.eperson.EPerson;
@@ -131,8 +131,8 @@ public class EmbargoHooks {
 
 		try {
 			// Get some basic metadata
-			DCValue titles[] = item.getMetadata(MetadataSchema.DC_SCHEMA, "title", null, Item.ANY);
-			DCValue authors[] = item.getMetadata(MetadataSchema.DC_SCHEMA, "contributor", "author", Item.ANY);
+			Metadatum titles[] = item.getMetadata(MetadataSchema.DC_SCHEMA, "title", null, Item.ANY);
+			Metadatum authors[] = item.getMetadata(MetadataSchema.DC_SCHEMA, "contributor", "author", Item.ANY);
 
 			String title = titles.length > 0 ? titles[0].value : "no title";
 			String author = authors.length > 0 ? authors[0].value : "no authors";
@@ -162,10 +162,8 @@ public class EmbargoHooks {
 			emailmsg.addArgument(liftDate.toString());
 			emailmsg.addArgument(url);
 			emailmsg.send();
-		} catch (IOException ioe) {
+		} catch (IOException | MessagingException ioe) {
 			log.warn("Problem sending notification email when setting embargo", ioe);
-		} catch (MessagingException me) {
-			log.warn("Problem sending notification email when setting embargo", me);
 		}
 	}
 
@@ -202,8 +200,8 @@ public class EmbargoHooks {
 		// Send email to thesis administrators
 		try {
 			// Get some basic metadata
-			DCValue[] titles = item.getMetadata(MetadataSchema.DC_SCHEMA, "title", null, Item.ANY);
-			DCValue[] authors = item.getMetadata(MetadataSchema.DC_SCHEMA, "contributor", "author", Item.ANY);
+			Metadatum[] titles = item.getMetadata(MetadataSchema.DC_SCHEMA, "title", null, Item.ANY);
+			Metadatum[] authors = item.getMetadata(MetadataSchema.DC_SCHEMA, "contributor", "author", Item.ANY);
 			String title = titles.length > 0 ? titles[0].value : "no title";
 			String author = authors.length > 0 ? authors[0].value : "no authors";
 			// Send email
@@ -230,10 +228,8 @@ public class EmbargoHooks {
 			emailmsg.addArgument(email);
 			emailmsg.addArgument(url);
 			emailmsg.send();
-		} catch (IOException ioe) {
+		} catch (IOException | MessagingException ioe) {
 			log.warn("Problem sending notification email when lifting embargo", ioe);
-		} catch (MessagingException me) {
-			log.warn("Problem sending notification email when lifting embargo", me);
 		}
 	}
 
@@ -249,8 +245,8 @@ public class EmbargoHooks {
 		// Send email to thesis administrators
 		try {
 			// Get some basic metadata
-			DCValue[] titles = item.getMetadata(MetadataSchema.DC_SCHEMA, "title", null, Item.ANY);
-			DCValue[] authors = item.getMetadata(MetadataSchema.DC_SCHEMA, "contributor", "author", Item.ANY);
+			Metadatum[] titles = item.getMetadata(MetadataSchema.DC_SCHEMA, "title", null, Item.ANY);
+			Metadatum[] authors = item.getMetadata(MetadataSchema.DC_SCHEMA, "contributor", "author", Item.ANY);
 			String title = titles.length > 0 ? titles[0].value : "no title";
 			String author = authors.length > 0 ? authors[0].value : "no authors";
 			// Send email
@@ -280,12 +276,8 @@ public class EmbargoHooks {
 			emailmsg.addArgument(url);
 			emailmsg.addArgument(collectionName);
 			emailmsg.send();
-		} catch (IOException ioe) {
+		} catch (IOException | MessagingException | SQLException ioe) {
 			log.warn("Problem sending notification email when detecting expired embargo", ioe);
-		} catch (MessagingException me) {
-			log.warn("Problem sending notification email when detecting expired embargo", me);
-		} catch (SQLException e) {
-			log.warn("Problem sending notification email when detecting expired embargo", e);
 		}
 	}
 
@@ -294,8 +286,8 @@ public class EmbargoHooks {
 		// Send email to thesis administrators
 		try {
 			// Get some basic metadata
-			DCValue[] titles = item.getMetadata(MetadataSchema.DC_SCHEMA, "title", null, Item.ANY);
-			DCValue[] authors = item.getMetadata(MetadataSchema.DC_SCHEMA, "contributor", "author", Item.ANY);
+			Metadatum[] titles = item.getMetadata(MetadataSchema.DC_SCHEMA, "title", null, Item.ANY);
+			Metadatum[] authors = item.getMetadata(MetadataSchema.DC_SCHEMA, "contributor", "author", Item.ANY);
 			String title = titles.length > 0 ? titles[0].value : "no title";
 			String author = authors.length > 0 ? authors[0].value : "no authors";
 			// Send email
