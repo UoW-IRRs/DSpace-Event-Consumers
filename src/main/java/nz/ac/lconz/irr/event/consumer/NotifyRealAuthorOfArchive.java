@@ -1,5 +1,7 @@
 package nz.ac.lconz.irr.event.consumer;
 
+import org.apache.commons.lang.StringUtils;
+import org.dspace.content.DCDate;
 import org.dspace.content.Item;
 import org.dspace.content.Metadatum;
 import org.dspace.core.*;
@@ -7,6 +9,8 @@ import org.dspace.event.Consumer;
 import org.dspace.event.Event;
 import org.dspace.handle.HandleManager;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 /**
@@ -22,11 +26,17 @@ import java.util.Locale;
  *         <p/>
  *         The template for the e-mail is expected to be called <i>author_notify_archive</i>
  *         in the dspace/config/emails directory.
+ *         <p/>
+ *         Additional functionality is available for embargoed items: when <code>notify.author.archive.embargo-field</code> is set
+ *         and the item has a non-empty metadata value for this metadata field, an additional argument is made available
+ *         to the e-mail template that consists of a preceding-text message, the date and a following-text message. These
+ *         messages need to be configured in <code>[dspace-src]/dspace-api/src/main/resources/Messages.properties</code>.
  */
 public class NotifyRealAuthorOfArchive implements Consumer {
 	private String schema;
 	private String element;
 	private String qualifier;
+	private String embargoField;
 
 	public void initialize() throws Exception {
 		String emailField = ConfigurationManager.getProperty("lconz-event", "notify.author.archive.field");
@@ -45,6 +55,8 @@ public class NotifyRealAuthorOfArchive implements Consumer {
 		if (components.length > 2) {
 			qualifier = components[2];
 		}
+
+		embargoField = ConfigurationManager.getProperty("lconz-event", "notify.author.archive.embargo-field");
 	}
 
 	public void consume(Context context, Event event) throws Exception {
@@ -83,6 +95,15 @@ public class NotifyRealAuthorOfArchive implements Consumer {
 		message.addArgument(item.getName());
 		message.addArgument(item.getOwningCollection().getName());
 		message.addArgument(HandleManager.getCanonicalForm(item.getHandle()));
+
+		if (StringUtils.isNotBlank(embargoField)) {
+			Metadatum[] values = item.getMetadataByMetadataString(embargoField);
+			if (values != null && values.length > 0 && values[0] != null && StringUtils.isNotBlank(values[0].value)) {
+				DCDate embargoDate = new DCDate(values[0].value);
+				message.addArgument(I18nUtil.getMessage("lconz-extra.notify-author.embargo.message"));
+				message.addArgument(SimpleDateFormat.getDateInstance(DateFormat.MEDIUM).format(embargoDate.toDate()));
+			}
+		}
 
 		message.send();
 	}
