@@ -27,16 +27,20 @@ import java.util.Locale;
  *         The template for the e-mail is expected to be called <i>author_notify_archive</i>
  *         in the dspace/config/emails directory.
  *         <p/>
- *         Additional functionality is available for embargoed items: when <code>notify.author.archive.embargo-field</code> is set
- *         and the item has a non-empty metadata value for this metadata field, an additional argument is made available
- *         to the e-mail template that consists of a preceding-text message, the date and a following-text message. These
- *         messages need to be configured in <code>[dspace-src]/dspace-api/src/main/resources/Messages.properties</code>.
+ *         Additional functionality is available for items with a specific, configurable field present:
+ *         when <code>notify.author.archive.special.field</code> is set and the item has a non-empty metadata value for
+ *         this metadata field, two additional arguments are made available to the e-mail template that consist of
+ *         a special message as well as the value of the field, optionally (if <code>notify.author.archive.special.type</code>
+ *         is set to a value of <code>date</code>) formatted as a user-friendly date string. The
+ *         message needs to be configured in <code>[dspace-src]/dspace-api/src/main/resources/Messages.properties</code>.
+ *         If the special field is not present, the two additional arguments will be the empty string.
  */
 public class NotifyRealAuthorOfArchive implements Consumer {
 	private String schema;
 	private String element;
 	private String qualifier;
-	private String embargoField;
+	private String specialField;
+	private String specialFieldType;
 
 	public void initialize() throws Exception {
 		String emailField = ConfigurationManager.getProperty("lconz-event", "notify.author.archive.field");
@@ -56,7 +60,8 @@ public class NotifyRealAuthorOfArchive implements Consumer {
 			qualifier = components[2];
 		}
 
-		embargoField = ConfigurationManager.getProperty("lconz-event", "notify.author.archive.embargo-field");
+		specialField = ConfigurationManager.getProperty("lconz-event", "notify.author.archive.special.field");
+		specialFieldType = ConfigurationManager.getProperty("lconz-event", "notify.author.archive.special.type");
 	}
 
 	public void consume(Context context, Event event) throws Exception {
@@ -96,16 +101,32 @@ public class NotifyRealAuthorOfArchive implements Consumer {
 		message.addArgument(item.getOwningCollection().getName());
 		message.addArgument(HandleManager.getCanonicalForm(item.getHandle()));
 
-		if (StringUtils.isNotBlank(embargoField)) {
-			Metadatum[] values = item.getMetadataByMetadataString(embargoField);
+		boolean addedSpecialText = false;
+		if (StringUtils.isNotBlank(specialField)) {
+			Metadatum[] values = item.getMetadataByMetadataString(specialField);
 			if (values != null && values.length > 0 && values[0] != null && StringUtils.isNotBlank(values[0].value)) {
-				DCDate embargoDate = new DCDate(values[0].value);
-				message.addArgument(I18nUtil.getMessage("lconz-extra.notify-author.embargo.message"));
-				message.addArgument(SimpleDateFormat.getDateInstance(DateFormat.MEDIUM).format(embargoDate.toDate()));
+				message.addArgument(I18nUtil.getMessage("lconz-extra.notify-author.special.message"));
+				String formattedValue = formatValue(values[0].value, specialFieldType);
+				message.addArgument(formattedValue);
+				addedSpecialText = true;
 			}
+		}
+		if (!addedSpecialText) {
+			// blank out values to prevent placeholder from showing up in e-mail
+			message.addArgument("");
+			message.addArgument("");
 		}
 
 		message.send();
+	}
+
+	private String formatValue(String specialValue, String specialFieldType) {
+		if ("date".equals(specialFieldType)) {
+			DCDate date = new DCDate(specialValue);
+			return SimpleDateFormat.getDateInstance(DateFormat.MEDIUM).format(date.toDate());
+		} else {
+			return specialValue;
+		}
 	}
 
 	public void end(Context context) throws Exception {
