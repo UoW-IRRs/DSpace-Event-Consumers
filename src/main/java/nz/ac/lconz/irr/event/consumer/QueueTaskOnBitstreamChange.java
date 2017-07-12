@@ -1,11 +1,17 @@
 package nz.ac.lconz.irr.event.consumer;
 
+import org.apache.commons.lang3.StringUtils;
+import org.dspace.content.Bundle;
+import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
+import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.event.Event;
 
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  *  @author Andrea Schweer schweer@waikato.ac.nz for the LCoNZ IRRs
@@ -46,10 +52,22 @@ public class QueueTaskOnBitstreamChange extends QueueTaskOnEvent {
 
 	@Override
 	boolean isApplicableEvent(Context ctx, Event event) throws SQLException {
+		String ignoreBundlesProp = ConfigurationManager.getProperty("lconz-events", "queue.bitstreamchange.ignore_bundles");
+		List<String> ignoreBundles;
+		if (StringUtils.isNotBlank(ignoreBundlesProp)) {
+			ignoreBundles = Arrays.asList(ignoreBundlesProp.split(",\\s*"));
+		} else {
+			ignoreBundles = Arrays.asList("TEXT", "THUMBNAIL", "PUBS_DATA");
+		}
+
 		int eventType = event.getEventType();
-		return (event.getSubjectType() == Constants.BUNDLE && (eventType == Event.ADD || eventType == Event.REMOVE))
-				|| (event.getSubjectType() == Constants.ITEM && eventType == Event.REMOVE)
-				&& (findItem(ctx, event) != null);
+		boolean eligible = (event.getSubjectType() == Constants.BUNDLE && (eventType == Event.ADD || eventType == Event.REMOVE))
+				|| (event.getSubjectType() == Constants.ITEM && eventType == Event.REMOVE) && (findItem(ctx, event) != null);
+		if (!eligible || event.getSubjectType() != Constants.BUNDLE) {
+			return eligible;
+		}
+		Bundle subject = (Bundle) event.getSubject(ctx);
+		return !ignoreBundles.contains(subject.getName());
 	}
 
 	String getTasksProperty() {
